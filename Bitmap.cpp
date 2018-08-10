@@ -18,7 +18,7 @@ void Bitmap::SetPixel(int x, int y, const Vec3& colour) {
 }
 
 bool Bitmap::WriteToDisk(std::string filename) {
-
+    // TODO
 }
 
 Bitmap::~Bitmap() {
