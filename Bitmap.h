@@ -5,24 +5,27 @@
 #include <string>
 #include "Vector.h"
 
-// TODO: un-const members and add copy/move semantics
-
 /* Class representing a bitmap image with 24-bit colour depth */
 class Bitmap {
 public:
     Bitmap(int width, int height);
+    Bitmap(const Bitmap& other);
+    Bitmap(Bitmap&& other);
     ~Bitmap();
+
+    Bitmap& operator=(const Bitmap& other);
+    Bitmap& operator=(Bitmap&& other);
 
     void SetPixel(int x, int y, const Vec3& colour);
     bool WriteToDisk(std::string filename);
 private:
-    const int w;
-    const int h;
+    int w;
+    int h;
 
     // Each row of the BMP has to be a multiple of 4, so row_size is not necessarily equal to w
-    const int row_size;
+    int row_size;
 
-    char* const data;
+    char* data;
 };
 
 #endif // BITMAP_H
