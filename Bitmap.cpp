@@ -11,7 +11,7 @@ Bitmap::Bitmap(int width, int height) :
 }
 
 void Bitmap::SetPixel(int x, int y, const Vec3& colour) {
-    int offset = y * row_size + x * 3;
+    auto offset = y * row_size + x * 3;
     data[offset + 0] = static_cast<char>(colour.x * 255.0f);
     data[offset + 1] = static_cast<char>(colour.y * 255.0f);
     data[offset + 2] = static_cast<char>(colour.z * 255.0f);

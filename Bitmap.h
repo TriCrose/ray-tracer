@@ -5,7 +5,7 @@
 #include <string>
 #include "Vector.h"
 
-// TODO: un-const members and add copy constructor as well as default move constructor
+// TODO: un-const members and add copy/move semantics
 
 /* Class representing a bitmap image with 24-bit colour depth */
 class Bitmap {
