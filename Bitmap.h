@@ -22,7 +22,7 @@ private:
     int w;
     int h;
 
-    // Each row of the BMP has to be a multiple of 4, so row_size is not necessarily equal to w
+    // Each row of the BMP has to be a multiple of 4 bytes, so row_size is not necessarily equal to w
     int row_size;
 
     char* data;

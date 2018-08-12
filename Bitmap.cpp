@@ -8,6 +8,7 @@ Bitmap::Bitmap(int width, int height) :
     h{height},
     row_size{( (3*w + 4 - 1)/4 ) * 4},
     data{new char[row_size * h]} {
+    std::cout << "Created blank " << w << "x" << h << " bitmap image.\n";
 }
 
 // Copy constructor
@@ -75,11 +76,14 @@ Bitmap& Bitmap::operator=(Bitmap&& other) {
 }
 
 void Bitmap::SetPixel(int x, int y, const Vec3& colour) {
-    // TODO: bounds checking
-    auto offset = y * row_size + x * 3;
-    data[offset + 0] = static_cast<char>(colour.x * 255.0f);
-    data[offset + 1] = static_cast<char>(colour.y * 255.0f);
-    data[offset + 2] = static_cast<char>(colour.z * 255.0f);
+    if (x >= w || x < 0 || y >= h || y < 0) {
+        std::cout << "Bitmap pixel (" << x << ", " << y << ") is out of bounds.\n";
+    } else {
+        auto offset = y * row_size + x * 3;
+        data[offset + 0] = static_cast<char>(colour.x * 255.0f);
+        data[offset + 1] = static_cast<char>(colour.y * 255.0f);
+        data[offset + 2] = static_cast<char>(colour.z * 255.0f);
+    }
 }
 
 bool Bitmap::WriteToDisk(std::string filename) {
