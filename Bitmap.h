@@ -17,7 +17,9 @@ public:
     Bitmap& operator=(Bitmap&& other);
 
     void SetPixel(int x, int y, const Vec3& colour);
-    bool WriteToDisk(std::string filename);
+    bool WriteToDisk(const std::string& filename) const;
+    int Width() const;
+    int Height() const;
 private:
     int w;
     int h;
@@ -25,7 +27,7 @@ private:
     // Each row of the BMP has to be a multiple of 4 bytes, so row_size is not necessarily equal to w
     int row_size;
 
-    char* data;
+    unsigned char* data;
 };
 
 #endif // BITMAP_H
