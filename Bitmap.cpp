@@ -1,14 +1,16 @@
 #include "Bitmap.h"
 
+#include <fstream>
+
 /* The row size is equal to (3 * width) rounded up to the nearest multiple of 4,
    which we calculate by doing a round-up integer division of (3 * width)/4 and then
    multiplying the result by 4. */
 Bitmap::Bitmap(int width, int height) :
     w{width},
     h{height},
-    row_size{( (3*w + 4 - 1)/4 ) * 4},
+    row_size{( (3*w + (4 - 1))/4 ) * 4},
     data{new unsigned char[row_size * h]} {
-    std::cout << "Created blank " << w << "x" << h << " bitmap image.\n";
+    std::cout << "Created blank " << w << "x" << h << " bitmap image\n";
 }
 
 // Copy constructor
@@ -72,7 +74,7 @@ Bitmap& Bitmap::operator=(Bitmap&& other) {
 
 void Bitmap::SetPixel(int x, int y, const Vec3& colour) {
     if (x >= w || x < 0 || y >= h || y < 0) {
-        std::cout << "Bitmap pixel (" << x << ", " << y << ") is out of bounds.\n";
+        std::cout << "Bitmap pixel (" << x << ", " << y << ") is out of bounds\n";
     } else {
         int offset { y * row_size + x * 3 };
         data[offset + 0] = static_cast<unsigned char>(colour.x * 255.0f);
@@ -82,8 +84,17 @@ void Bitmap::SetPixel(int x, int y, const Vec3& colour) {
 }
 
 bool Bitmap::WriteToDisk(const std::string& filename) const {
-    // TODO
-    return true;
+    std::ofstream file {filename, std::ios::out | std::ios::binary};
+    if (file.is_open()) {
+        // TODO: write header
+        file.write(reinterpret_cast<char*>(data), row_size * h);
+        file.close();
+        std::cout << "Finished writing image data to " << filename << "\n";
+        return true;
+    } else {
+        std::cout << "Failed to open file " << filename << " for output\n";
+        return false;
+    }
 }
 
 int Bitmap::Width() const {
