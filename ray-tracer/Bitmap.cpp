@@ -10,6 +10,7 @@ Bitmap::Bitmap(int width, int height) :
     h{height},
     row_size{( (3*w + (4 - 1))/4 ) * 4},
     data{new unsigned char[row_size * h]} {
+    memset(data, 0, row_size * h);
     std::cout << "Created blank " << w << "x" << h << " bitmap image\n";
 }
 
@@ -76,7 +77,7 @@ void Bitmap::SetPixel(int x, int y, const Vec3& colour) {
     if (x >= w || x < 0 || y >= h || y < 0) {
         std::cout << "Bitmap pixel (" << x << ", " << y << ") is out of bounds\n";
     } else {
-        int offset { y * row_size + x * 3 };
+        int offset { (h - y - 1) * row_size + x * 3 };
         data[offset + 0] = static_cast<unsigned char>(colour.x * 255.0f);
         data[offset + 1] = static_cast<unsigned char>(colour.y * 255.0f);
         data[offset + 2] = static_cast<unsigned char>(colour.z * 255.0f);
@@ -86,8 +87,29 @@ void Bitmap::SetPixel(int x, int y, const Vec3& colour) {
 bool Bitmap::WriteToDisk(const std::string& filename) const {
     std::ofstream file {filename, std::ios::out | std::ios::binary};
     if (file.is_open()) {
-        // TODO: write header
-        file.write(reinterpret_cast<char*>(data), row_size * h);
+        const static int kHeaderSize = 54;
+        file.imbue(std::locale::classic());
+        int data_size = row_size * h;
+        int file_size = kHeaderSize + data_size;
+        char header[kHeaderSize] {
+            'B', 'M',
+            file_size, file_size >> 8, file_size >> 16, file_size >> 24,
+            0, 0, 0, 0,
+            kHeaderSize, kHeaderSize >> 8, kHeaderSize >> 16, kHeaderSize >> 24,
+            40, 0, 0, 0,
+            w, w >> 8, w >> 16, w >> 24,
+            h, h >> 8, h >> 16, h >> 24,
+            1, 0,
+            24, 0,
+            0, 0, 0, 0,
+            data_size, data_size >> 8, data_size >> 16, data_size >> 24,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0
+        };
+        file.write(header, kHeaderSize);
+        file.write(reinterpret_cast<char*>(data), data_size);
         file.close();
         std::cout << "Finished writing image data to " << filename << "\n";
         return true;
