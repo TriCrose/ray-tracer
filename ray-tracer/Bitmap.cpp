@@ -9,7 +9,8 @@ Bitmap::Bitmap(int width, int height) :
     w{width},
     h{height},
     row_size{( (3*w + (4 - 1))/4 ) * 4},
-    data{new unsigned char[row_size * h]} {
+    data{new unsigned char[row_size * h]}
+{
     memset(data, 0, row_size * h);
     std::cout << "Created blank " << w << "x" << h << " bitmap image\n";
 }
