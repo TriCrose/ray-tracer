@@ -2,8 +2,8 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "Scene.h"
 #include <vector>
+#include "Scene.h"
 
 class Renderer {
 public:
