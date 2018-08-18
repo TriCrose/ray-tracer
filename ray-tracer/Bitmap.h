@@ -3,31 +3,32 @@
 #pragma once
 
 #include <string>
+#include <array>
+#include <vector>
+
 #include "Vector.h"
 
 /* Class representing a bitmap image with 24-bit colour depth */
 class Bitmap {
 public:
     Bitmap(int width, int height);
-    Bitmap(const Bitmap& other);
-    Bitmap(Bitmap&& other);
-    ~Bitmap();
 
-    Bitmap& operator=(const Bitmap& other);
-    Bitmap& operator=(Bitmap&& other);
+    int Width() const;
+    int Height() const;
 
     void SetPixel(int x, int y, const Vec3& colour);
     bool WriteToDisk(const std::string& filename) const;
-    int Width() const;
-    int Height() const;
 private:
-    int w;
-    int h;
+    int width;
+    int height;
 
-    // Each row of the BMP has to be a multiple of 4 bytes, so row_size is not necessarily equal to w
+    // This contains both the 14-byte BMP header and the 40-byte DIB header
+    static constexpr int header_size = 14 + 40;
+    std::array<unsigned char, header_size> header;
+
+    // Each row of the pixel data has to be a multiple of 4 bytes, so row_size is not necessarily equal to 3 * width
     int row_size;
-
-    unsigned char* data;
+    std::vector<unsigned char> pixel_data;
 };
 
 #endif // BITMAP_H

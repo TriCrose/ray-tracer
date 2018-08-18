@@ -6,9 +6,9 @@ int main(int argc, char** argv) {
         float i_factor = static_cast<float>(i) / static_cast<float>(image.Width());
         float j_factor = static_cast<float>(j) / static_cast<float>(image.Height());
         image.SetPixel(i, j, {
-            i_factor * 0.1f + j_factor * 0.9f,
-            i_factor * 0.6f + j_factor * 0.4f,
-            i_factor * 0.75f + j_factor * 0.25f
+            i_factor * 0.5f + j_factor * 0.5f,
+            i_factor * 0.7f + j_factor * 0.2f,
+            i_factor * 0.1f + j_factor * 0.9f
         });
     }
     image.WriteToDisk("output.bmp");
