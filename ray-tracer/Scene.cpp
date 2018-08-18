@@ -1,3 +1,6 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include "Scene.h"
 
 using namespace Scene;
@@ -18,14 +21,13 @@ Camera::Camera(int image_width, int image_height, Vec3 position, Vec3 dir, float
     image_height{image_height},
     position{position},
     dir{dir},
-    fov{fov},
+    fov{fov * static_cast<float>(M_PI)/180.0f},
     near_plane{near_plane} {}
-
 
 /* Scene object definitions */
 
 // Sphere
-Sphere::Sphere(Vec3 origin, Vec3 radius) : origin{origin}, radius{radius} {}
+Sphere::Sphere(Vec3 origin, float radius) : origin{ origin }, radius{ radius } {}
 
 float Sphere::RayCollision(const Ray& r) const {
     float result = std::numeric_limits<float>::infinity();

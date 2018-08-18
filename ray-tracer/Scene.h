@@ -1,6 +1,6 @@
+#pragma once
 #ifndef OBJECTS_H
 #define OBJECTS_H
-#pragma once
 
 #include "Ray.h"
 
@@ -8,7 +8,7 @@ namespace Scene {
 
 class Camera {
 public:
-    // fov is in radians
+    // fov is in degrees
     Camera(int image_width, int image_height, float near_plane);
     Camera(int image_width, int image_height, Vec3 position, Vec3 dir, float fov, float near_plane);
 
@@ -36,12 +36,12 @@ public:
 
 class Sphere : public Object {
 public:
-    Sphere(Vec3 origin, Vec3 radius);
+    Sphere(Vec3 origin, float radius);
 
     float RayCollision(const Ray& r) const;
 
     Vec3 origin;
-    Vec3 radius;
+    float radius;
 };
 
 } // namespace Scene

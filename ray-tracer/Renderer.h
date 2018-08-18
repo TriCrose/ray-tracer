@@ -1,6 +1,6 @@
+#pragma once
 #ifndef RENDERER_H
 #define RENDERER_H
-#pragma once
 
 #include "Scene.h"
 #include <vector>

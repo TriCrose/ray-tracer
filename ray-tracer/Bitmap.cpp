@@ -1,6 +1,6 @@
-#include "Bitmap.h"
-
 #include <fstream>
+
+#include "Bitmap.h"
 
 /* The row size is equal to (3 * width) rounded up to the nearest multiple of 4,
    which we calculate by doing a round-up integer division of (3 * width)/4 and then

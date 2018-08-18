@@ -1,6 +1,6 @@
+#pragma once
 #ifndef RAY_H
 #define RAY_H
-#pragma once
 
 #include "Vector.h"
 
