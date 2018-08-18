@@ -29,6 +29,6 @@ Sphere::Sphere(Vec3 origin, Vec3 radius) : origin{origin}, radius{radius} {}
 
 float Sphere::RayCollision(const Ray& r) const {
     float result = std::numeric_limits<float>::infinity();
-    // TODO
+    // TODO: implement line-sphere collision
     return result;
 }
