@@ -1,4 +1,4 @@
-#include "Objects.h"
+#include "Scene.h"
 #include "Bitmap.h"
 
 int main(int argc, char** argv) {

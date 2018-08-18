@@ -81,7 +81,7 @@ int Bitmap::Height() const {
 
 void Bitmap::SetPixel(int x, int y, const Vec3& colour) {
     if (0 <= x && x < width && 0 <= y && y < height) {
-        int offset { (height - y - 1) * row_size + x * 3 };
+        int offset { y * row_size + x * 3 };
         pixel_data[offset + 0] = static_cast<unsigned char>(colour.x * 255.0f);
         pixel_data[offset + 1] = static_cast<unsigned char>(colour.y * 255.0f);
         pixel_data[offset + 2] = static_cast<unsigned char>(colour.z * 255.0f);

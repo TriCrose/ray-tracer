@@ -128,11 +128,11 @@
   <ItemGroup>
     <ClCompile Include="Bitmap.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Objects.cpp" />
+    <ClCompile Include="Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bitmap.h" />
-    <ClInclude Include="Objects.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
