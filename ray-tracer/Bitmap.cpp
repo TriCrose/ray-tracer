@@ -13,8 +13,8 @@ Bitmap::Bitmap(int width, int height) :
     row_size    {( (3*width + (4 - 1))/4 ) * 4},
     pixel_data  ((row_size * height), 0)        // Note parentheses, see above
 {
-    int data_size = pixel_data.size();
-    int file_size = header_size + data_size;
+    int data_size { pixel_data.size() };
+    int file_size { header_size + data_size };
 
     // Create the header (note: integers are little-endian, hence the shifting)
     header = {
