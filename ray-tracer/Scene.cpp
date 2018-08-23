@@ -1,5 +1,4 @@
-#define _USE_MATH_DEFINES
-#include <cmath>
+#include <algorithm>
 
 #include "Scene.h"
 
@@ -21,7 +20,7 @@ Camera::Camera(int image_width, int image_height, Vec3 position, Vec3 dir, float
     image_height{image_height},
     position{position},
     dir{dir},
-    fov{fov * static_cast<float>(M_PI)/180.0f},
+    fov{fov},
     near_plane{near_plane} {}
 
 /* Scene object definitions */
@@ -30,7 +29,24 @@ Camera::Camera(int image_width, int image_height, Vec3 position, Vec3 dir, float
 Sphere::Sphere(Vec3 origin, float radius) : origin{ origin }, radius{ radius } {}
 
 float Sphere::RayCollision(const Ray& r) const {
-    float result = std::numeric_limits<float>::infinity();
-    // TODO: implement line-sphere collision
-    return result;
+    // Quadratic equation (a is 1)
+    Vec3 diff { r.origin - origin };
+    float b { 2 * diff.Dot(r.dir) };
+    float c { diff.LengthSquared() - radius * radius };
+    float discriminant { b * b - 4 * c };
+
+    if (discriminant < 0.0f) {
+        return infinity;
+    } else if (discriminant < epsilon) {
+        return b > 0.0f ? infinity : -b;
+    } else {
+        float s { std::sqrtf(discriminant) };
+        float one { -b + s };
+        float two { -b - s };
+
+        if (one < 0.0f && two < 0.0f) return infinity;
+        else if (one < 0.0f) return two;
+        else if (two < 0.0f) return one;
+        else return std::min(one, two);
+    }
 }

@@ -2,8 +2,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
 class Vec3 {
 public:
@@ -33,7 +33,8 @@ public:
     Vec3 Cross(const Vec3& v) const { return { y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x }; }
 
     // Normalisation
-    float Length() const { return std::sqrt(x*x + y*y + z*z); }
+    float Length() const { return std::sqrtf(x*x + y*y + z*z); }
+    float LengthSquared() const { return x*x + y*y + z*z; }
     Vec3 Normalized() const { return *this / Length(); }
 
     float x, y, z;

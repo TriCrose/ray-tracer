@@ -7,6 +7,8 @@ bool Renderer::Render(const Scene::Camera& camera,
                       const std::string& bmp_filename)
 {
     Bitmap output {camera.image_width, camera.image_height};
-    // TODO: write rendering algorithm
+    
+    // TODO: rendering algorithm
+
     return output.WriteToDisk(bmp_filename);
 }
