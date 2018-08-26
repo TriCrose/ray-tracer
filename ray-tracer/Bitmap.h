@@ -23,8 +23,8 @@ private:
     int height;
 
     // This contains both the 14-byte BMP header and the 40-byte DIB header
-    static constexpr unsigned header_size = 14 + 40;
-    std::array<unsigned char, header_size> header;
+    static constexpr unsigned kHeaderSize = 14 + 40;
+    std::array<unsigned char, kHeaderSize> header;
 
     // Each row of the pixel data has to be a multiple of 4 bytes, so row_size is not necessarily equal to 3 * width
     int row_size;

@@ -1,32 +1,34 @@
 #include <algorithm>
+#include "Bitmap.h"
 
 #include "Scene.h"
 
-using namespace Scene;
+// Scene
 
-// Light
-Light::Light(Vec3 position) : position{position}, colour{1.0f} {}
-Light::Light(Vec3 position, Vec3 colour) : position{position}, colour{colour} {}
+Scene::Scene(int image_width, int image_height, float fov) :
+    width{image_width},
+    height{image_height},
+    fov{fov} {
+}
 
-// Camera
-Camera::Camera(int image_width, int image_height, float near_plane) :
-    image_width{image_width},
-    image_height{image_height},
-    // TODO: work out some good default values
-    near_plane{near_plane} {}
+void Scene::CreateLight(const Vec3& pos, const Vec3& colour) {
+    lights.push_back({pos, colour});
+}
 
-Camera::Camera(int image_width, int image_height, Vec3 position, Vec3 dir, float fov, float near_plane) :
-    image_width{image_width},
-    image_height{image_height},
-    position{position},
-    dir{dir},
-    fov{fov},
-    near_plane{near_plane} {}
+void Scene::AddObject(const Object* obj) {
+    objects.push_back(obj);
+}
 
-/* Scene object definitions */
+bool Scene::Render(const std::string& filename) const {
+    Bitmap output {width, height};
+    // TODO
+    return output.WriteToDisk(filename);
+}
 
-// Sphere
-Sphere::Sphere(Vec3 origin, float radius) : origin{ origin }, radius{ radius } {}
+// Objects
+
+Sphere::Sphere(Vec3 origin, float radius) : origin{ origin }, radius{ radius } {
+}
 
 float Sphere::RayCollision(const Ray& r) const {
     // Quadratic equation (a is 1)
@@ -36,17 +38,21 @@ float Sphere::RayCollision(const Ray& r) const {
     float discriminant { b * b - 4 * c };
 
     if (discriminant < 0.0f) {
-        return infinity;
-    } else if (discriminant < epsilon) {
-        return b > 0.0f ? infinity : -b;
+        return Object::kInfinity;
+    } else if (discriminant < Object::kEpsilon) {
+        return b > 0.0f ? Object::kInfinity : -b;
     } else {
         float s { std::sqrtf(discriminant) };
         float one { -b + s };
         float two { -b - s };
 
-        if (one < 0.0f && two < 0.0f) return infinity;
+        if (one < 0.0f && two < 0.0f) return Object::kInfinity;
         else if (one < 0.0f) return two;
         else if (two < 0.0f) return one;
         else return std::min(one, two);
     }
+}
+
+Vec3 Sphere::Normal(const Vec3& pos) const {
+    return (pos - origin).Normalized();
 }

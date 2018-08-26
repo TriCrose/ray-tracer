@@ -1,26 +1,16 @@
-#include <cmath>
+#include "Scene.h"
 
-#include "Renderer.h"
+namespace {
+    inline float radians(float degrees) { return degrees * 3.14159f/180.0f; }
+}
 
 int main(int argc, char** argv) {
-    Scene::Camera camera {
-        1920, 1080,
-        {0.0f, 0.0f, 0.0f},
-        {0.0f, 0.0f, -1.0f},
-        100.0f,
-        1.0f
-    };
-    
-    Scene::Light light {
-        {-1.0f, 10.0f, -5.0f}
-    };
+    Scene scene {1920, 1080, radians(100.0f)};
+    scene.CreateLight({-1.0f, 10.0f, -5.0f});
 
-    Scene::Sphere sphere {
-        {0.0f, 0.0f, -6.0f},
-        3.0f
-    };
+    Sphere sphere {{0.0f, 0.0f, -6.0f}, 3.0f};
+    scene.AddObject(&sphere);
 
-    Renderer r;
-    r.Render(camera, light, {&sphere}, "output.bmp");
+    scene.Render("output.bmp");
     return 0;
 }

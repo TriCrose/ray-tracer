@@ -21,12 +21,12 @@ public:
     Vec3 operator*(float f) const { return { x * f, y * f, z * f }; }
     Vec3 operator/(float f) const { return { x / f, y / f, z / f }; }
 
-    const Vec3& operator+=(const Vec3& v) { x += v.x; y += v.y; z += v.z; return *this; }
-    const Vec3& operator-=(const Vec3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
-    const Vec3& operator*=(const Vec3& v) { x *= v.x; y *= v.y; z *= v.z; return *this; }
-    const Vec3& operator/=(const Vec3& v) { x /= v.x; y /= v.y; z /= v.z; return *this; }
-    const Vec3& operator*=(float f) { x *= f; y *= f; z *= f; return *this; }
-    const Vec3& operator/=(float f) { x /= f; y /= f; z /= f; return *this; }
+    Vec3& operator+=(const Vec3& v) { x += v.x; y += v.y; z += v.z; return *this; }
+    Vec3& operator-=(const Vec3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
+    Vec3& operator*=(const Vec3& v) { x *= v.x; y *= v.y; z *= v.z; return *this; }
+    Vec3& operator/=(const Vec3& v) { x /= v.x; y /= v.y; z /= v.z; return *this; }
+    Vec3& operator*=(float f) { x *= f; y *= f; z *= f; return *this; }
+    Vec3& operator/=(float f) { x /= f; y /= f; z /= f; return *this; }
 
     // Products
     float Dot(const Vec3& v) const { return x * v.x + y * v.y + z * v.z; }
