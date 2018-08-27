@@ -38,17 +38,16 @@ public:
 };
 
 class Scene {
-    using Light = std::pair<Vec3, Vec3>;
 public:
     Scene(int image_width, int image_height, float fov);
 
-    void CreateLight(const Vec3& pos, const Vec3& colour = {1.0f});
+    void SetLight(const Vec3& pos, const Vec3& colour = {1.0f});
     void AddObject(const Object* obj);
 
     bool Render(const std::string& filename) const;
 private:
     std::vector<const Object*> objects;
-    std::vector<Light> lights;
+    std::pair<Vec3, Vec3> light;
 
     int width;
     int height;

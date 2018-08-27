@@ -11,8 +11,9 @@ Scene::Scene(int image_width, int image_height, float fov) :
     fov{fov} {
 }
 
-void Scene::CreateLight(const Vec3& pos, const Vec3& colour) {
-    lights.push_back({pos, colour});
+void Scene::SetLight(const Vec3& pos, const Vec3& colour) {
+    light.first = pos;
+    light.second = colour;
 }
 
 void Scene::AddObject(const Object* obj) {
@@ -21,7 +22,37 @@ void Scene::AddObject(const Object* obj) {
 
 bool Scene::Render(const std::string& filename) const {
     Bitmap output {width, height};
-    // TODO
+    
+    float aspect {static_cast<float>(width)/static_cast<float>(height)};
+    Vec3 camera_position {0.0f, -0.5f * aspect/std::tanf(0.5f * fov), 0.0f};
+
+    for (int i = 0; i < width; i++) {
+        float hor_proportion {static_cast<float>(i)/static_cast<float>(width)};
+
+        for (int j = 0; j < height; j++) {
+            float vert_proportion {static_cast<float>(j)/static_cast<float>(height)};
+            Vec3 pixel_location {aspect * (hor_proportion - 0.5f), vert_proportion - 0.5f, 0.0f};
+            
+            Ray r {camera_position, pixel_location - camera_position};
+            float closest_dist {Object::kInfinity};
+            const Object* closest_obj {nullptr};
+
+            for (auto obj : objects) {
+                float dist {obj->RayCollision(r)};
+                if (dist < closest_dist) {
+                    closest_dist = dist;
+                    closest_obj = obj;
+                }
+            }
+
+            if (closest_obj) {
+                Vec3 point {r.Along(closest_dist)};
+                Vec3 normal {closest_obj->Normal(point)};
+                output.SetPixel(i, j, 1.0f);
+            }
+        }
+    }
+
     return output.WriteToDisk(filename);
 }
 
