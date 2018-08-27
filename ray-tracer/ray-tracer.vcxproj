@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClInclude Include="Bitmap.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

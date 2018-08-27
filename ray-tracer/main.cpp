@@ -9,6 +9,5 @@ int main(int argc, char** argv) {
     scene.AddObject(&sphere);
 
     scene.Render("output.bmp");
-    system("PAUSE");
     return 0;
 }

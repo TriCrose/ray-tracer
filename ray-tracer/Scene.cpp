@@ -26,7 +26,7 @@ bool Scene::Render(const std::string& filename) const {
     Bitmap output {width, height};
     
     float aspect {static_cast<float>(width)/static_cast<float>(height)};
-    Vec3 camera_position {0.0f, -0.5f * aspect/std::tanf(0.5f * fov), 0.0f};
+    Vec3 camera_position {0.0f, 0.0f, 0.5f * aspect / std::tanf(0.5f * fov)};
 
     for (int i = 0; i < width; i++) {
         float hor_proportion {static_cast<float>(i)/static_cast<float>(width)};
