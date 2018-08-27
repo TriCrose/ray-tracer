@@ -3,6 +3,7 @@
 #define VECTOR_H
 
 #include <cmath>
+#include <algorithm>
 #include <iostream>
 
 class Vec3 {
@@ -36,6 +37,15 @@ public:
     float Length() const { return std::sqrtf(x*x + y*y + z*z); }
     float LengthSquared() const { return x*x + y*y + z*z; }
     Vec3 Normalized() const { return *this / Length(); }
+
+    // Clamp to (0, 1)
+    Vec3 Clamped() const {
+        return {
+            std::min(std::max(x, 0.0f), 1.0f),
+            std::min(std::max(y, 0.0f), 1.0f),
+            std::min(std::max(z, 0.0f), 1.0f)
+        };
+    }
 
     float x, y, z;
 };

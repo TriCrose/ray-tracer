@@ -9,7 +9,7 @@
 
 class Ray {
 public:
-    Ray(Vec3 origin, Vec3 dir) : origin{ origin }, dir{ dir.Normalized() } {}
+    Ray(Vec3 origin, Vec3 dir) : origin{origin}, dir{dir} {}
 
     Vec3 Along(float dist) const { return origin + dist * dir; }
 

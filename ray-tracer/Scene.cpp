@@ -35,7 +35,7 @@ bool Scene::Render(const std::string& filename) const {
             float vert_proportion {static_cast<float>(j)/static_cast<float>(height)};
             Vec3 pixel_location {aspect * (hor_proportion - 0.5f), vert_proportion - 0.5f, 0.0f};
             
-            Ray r {camera_position, pixel_location - camera_position};
+            Ray r {camera_position, (pixel_location - camera_position).Normalized()};
             float closest_dist {Utils::kInfinity};
             const Object* closest_obj {nullptr};
 
@@ -49,8 +49,17 @@ bool Scene::Render(const std::string& filename) const {
 
             if (closest_obj) {
                 Vec3 point {r.Along(closest_dist)};
-                Vec3 normal {closest_obj->Normal(point)};
-                output.SetPixel(i, j, 1.0f);
+                Vec3 light_ray {(light.first - point).Normalized()};
+
+                Vec3 ambient {0.02f, 0.02f, 0.02f};
+                Vec3 diffuse {};
+                Vec3 specular {};
+
+                if (closest_obj->RayCollision({point, light_ray}) == Utils::kInfinity) {
+                    diffuse = Vec3{std::max(closest_obj->Normal(point).Dot(light_ray), 0.0f)};
+                }
+
+                output.SetPixel(i, j, (ambient + diffuse + specular).Clamped());
             }
         }
     }
