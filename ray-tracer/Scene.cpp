@@ -1,14 +1,16 @@
 #include <algorithm>
 #include "Bitmap.h"
+#include "Utils.h"
 
 #include "Scene.h"
 
 // Scene
 
 Scene::Scene(int image_width, int image_height, float fov) :
-    width{image_width},
-    height{image_height},
-    fov{fov} {
+    width   {image_width},
+    height  {image_height},
+    fov     {fov}
+{
 }
 
 void Scene::SetLight(const Vec3& pos, const Vec3& colour) {
@@ -34,7 +36,7 @@ bool Scene::Render(const std::string& filename) const {
             Vec3 pixel_location {aspect * (hor_proportion - 0.5f), vert_proportion - 0.5f, 0.0f};
             
             Ray r {camera_position, pixel_location - camera_position};
-            float closest_dist {Object::kInfinity};
+            float closest_dist {Utils::kInfinity};
             const Object* closest_obj {nullptr};
 
             for (auto obj : objects) {
@@ -58,7 +60,10 @@ bool Scene::Render(const std::string& filename) const {
 
 // Objects
 
-Sphere::Sphere(Vec3 origin, float radius) : origin{ origin }, radius{ radius } {
+Sphere::Sphere(Vec3 origin, float radius) :
+    origin{origin},
+    radius{radius}
+{
 }
 
 float Sphere::RayCollision(const Ray& r) const {
@@ -69,15 +74,15 @@ float Sphere::RayCollision(const Ray& r) const {
     float discriminant { b * b - 4 * c };
 
     if (discriminant < 0.0f) {
-        return Object::kInfinity;
-    } else if (discriminant < Object::kEpsilon) {
-        return b > 0.0f ? Object::kInfinity : -b;
+        return Utils::kInfinity;
+    } else if (discriminant < Utils::kEpsilon) {
+        return b > 0.0f ? Utils::kInfinity : -b;
     } else {
         float s { std::sqrtf(discriminant) };
         float one { -b + s };
         float two { -b - s };
 
-        if (one < 0.0f && two < 0.0f) return Object::kInfinity;
+        if (one < 0.0f && two < 0.0f) return Utils::kInfinity;
         else if (one < 0.0f) return two;
         else if (two < 0.0f) return one;
         else return std::min(one, two);

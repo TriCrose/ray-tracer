@@ -21,9 +21,6 @@ class Object {
 public:
     virtual float RayCollision(const Ray&) const = 0;
     virtual Vec3 Normal(const Vec3&) const = 0;
-
-    static constexpr float kEpsilon = 0.01f;
-    static constexpr float kInfinity = std::numeric_limits<float>::infinity();
 };
 
 class Sphere : public Object {
