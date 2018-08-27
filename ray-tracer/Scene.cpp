@@ -77,10 +77,10 @@ Sphere::Sphere(Vec3 origin, float radius) :
 
 float Sphere::RayCollision(const Ray& r) const {
     // Quadratic equation (a is 1)
-    Vec3 diff { r.origin - origin };
-    float b { 2 * diff.Dot(r.dir) };
-    float c { diff.LengthSquared() - radius * radius };
-    float discriminant { b * b - 4 * c };
+    Vec3 diff {r.origin - origin};
+    float b {2 * diff.Dot(r.dir)};
+    float c {diff.LengthSquared() - radius * radius};
+    float discriminant {b * b - 4 * c};
 
     if (discriminant < 0.0f) {
         return Utils::kInfinity;
@@ -88,8 +88,8 @@ float Sphere::RayCollision(const Ray& r) const {
         return b > 0.0f ? Utils::kInfinity : -b;
     } else {
         float s { std::sqrtf(discriminant) };
-        float one { -b + s };
-        float two { -b - s };
+        float one {-b + s};
+        float two {-b - s};
 
         if (one < 0.0f && two < 0.0f) return Utils::kInfinity;
         else if (one < 0.0f) return two;
