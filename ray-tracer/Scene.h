@@ -38,7 +38,7 @@ class Scene {
 public:
     Scene(int image_width, int image_height, float fov);
 
-    void SetLight(const Vec3& pos, const Vec3& colour = {1.0f});
+    void SetLight(const Vec3& pos, const Vec3& colour = Vec3{1.0f});
     void AddObject(const Object* obj);
 
     bool Render(const std::string& filename) const;

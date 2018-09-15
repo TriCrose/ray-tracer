@@ -26,16 +26,16 @@ bool Scene::Render(const std::string& filename) const {
     Bitmap output {width, height};
     
     float aspect {static_cast<float>(width)/static_cast<float>(height)};
-    Vec3 camera_position {0.0f, 0.0f, 0.5f * aspect / std::tanf(0.5f * fov)};
+    Vec3 camera_location {0.0f, 0.0f, 0.5f * aspect / std::tanf(0.5f * fov)};
 
-    for (int i = 0; i < width; i++) {
+    for (int i {0}; i < width; i++) {
         float hor_proportion {static_cast<float>(i)/static_cast<float>(width)};
 
-        for (int j = 0; j < height; j++) {
+        for (int j {0}; j < height; j++) {
             float vert_proportion {static_cast<float>(j)/static_cast<float>(height)};
             Vec3 pixel_location {aspect * (hor_proportion - 0.5f), vert_proportion - 0.5f, 0.0f};
             
-            Ray r {camera_position, (pixel_location - camera_position).Normalized()};
+            Ray r {camera_location, (pixel_location - camera_location).Normalized()};
             float closest_dist {Utils::kInfinity};
             const Object* closest_obj {nullptr};
 
@@ -69,10 +69,7 @@ bool Scene::Render(const std::string& filename) const {
 
 // Objects
 
-Sphere::Sphere(Vec3 origin, float radius) :
-    origin{origin},
-    radius{radius}
-{
+Sphere::Sphere(Vec3 origin, float radius) : origin{origin}, radius{radius} {
 }
 
 float Sphere::RayCollision(const Ray& r) const {
@@ -87,7 +84,7 @@ float Sphere::RayCollision(const Ray& r) const {
     } else if (discriminant < Utils::kEpsilon) {
         return b > 0.0f ? Utils::kInfinity : -b;
     } else {
-        float s { std::sqrtf(discriminant) };
+        float s {std::sqrtf(discriminant)};
         float one {-b + s};
         float two {-b - s};
 
