@@ -88,8 +88,8 @@ float Sphere::RayCollision(const Ray& r) const {
         return b > 0.0f ? Utils::kInfinity : -b;
     } else {
         float s {std::sqrtf(discriminant)};
-        float one {-b + s};
-        float two {-b - s};
+        float one {(-b + s)/2.0f};
+        float two {(-b - s)/2.0f};
 
         if (one < 0.0f && two < 0.0f) return Utils::kInfinity;
         else if (one < 0.0f) return two;
