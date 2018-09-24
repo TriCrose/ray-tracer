@@ -69,6 +69,9 @@ bool Scene::Render(const std::string& filename) const {
 
 // Objects
 
+Object::~Object() {
+}
+
 Sphere::Sphere(Vec3 origin, float radius) : origin{origin}, radius{radius} {
 }
 
