@@ -13,7 +13,7 @@ Bitmap::Bitmap(int width, int height) :
     row_size    {( (3*width + (4 - 1))/4 ) * 4},
     pixel_data  ((row_size * height), 0)        // Note parentheses, see above
 {
-    
+
     unsigned data_size { static_cast<unsigned>(pixel_data.size()) };
     unsigned file_size { kHeaderSize + data_size };
 
@@ -36,7 +36,7 @@ Bitmap::Bitmap(int width, int height) :
         static_cast<unsigned char>(kHeaderSize >> 8),
         static_cast<unsigned char>(kHeaderSize >> 16),
         static_cast<unsigned char>(kHeaderSize >> 24),
-        
+
         // DIB header size, which is 40 (4 bytes)
         40, 0, 0, 0,
 
