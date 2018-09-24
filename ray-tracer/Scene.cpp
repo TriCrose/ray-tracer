@@ -48,7 +48,7 @@ bool Scene::Render(const std::string& filename) const {
             }
 
             if (closest_obj) {
-                Vec3 point {r.Along(closest_dist)};
+                Vec3 point {r.Along(closest_dist - Utils::kEpsilon)};
                 Vec3 light_ray {(light.first - point).Normalized()};
 
                 Vec3 ambient {0.02f, 0.02f, 0.02f};
@@ -57,6 +57,7 @@ bool Scene::Render(const std::string& filename) const {
 
                 if (closest_obj->RayCollision({point, light_ray}) == Utils::kInfinity) {
                     diffuse = Vec3{std::max(closest_obj->Normal(point).Dot(light_ray), 0.0f)};
+                    diffuse *= light.second;
                 }
 
                 output.SetPixel(i, j, (ambient + diffuse + specular).Clamped());
@@ -88,13 +89,9 @@ float Sphere::RayCollision(const Ray& r) const {
         return b > 0.0f ? Utils::kInfinity : -b;
     } else {
         float s {std::sqrtf(discriminant)};
-        float one {(-b + s)/2.0f};
-        float two {(-b - s)/2.0f};
-
-        if (one < 0.0f && two < 0.0f) return Utils::kInfinity;
-        else if (one < 0.0f) return two;
-        else if (two < 0.0f) return one;
-        else return std::min(one, two);
+        if (s < b) return Utils::kInfinity;
+        else if (s > -b) return (-b + s)/2.0f;
+        else return (-b - s)/2.0f;
     }
 }
 
