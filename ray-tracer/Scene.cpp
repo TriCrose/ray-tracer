@@ -49,15 +49,21 @@ bool Scene::Render(const std::string& filename) const {
 
             if (closest_obj) {
                 Vec3 point {r.Along(closest_dist - Utils::kEpsilon)};
-                Vec3 light_ray {(light.first - point).Normalized()};
+                Vec3 light_vector {(light.first - point).Normalized()};
+                Vec3 normal {closest_obj->Normal(point)};
+
+                Vec3 eye_vector {(camera_location - point).Normalized()};
+                Vec3 reflected {-light_vector.Reflected(normal)};
+                float spec_coefficient = 100.0f;
 
                 Vec3 ambient {0.02f, 0.02f, 0.02f};
                 Vec3 diffuse {};
                 Vec3 specular {};
 
-                if (closest_obj->RayCollision({point, light_ray}) == Utils::kInfinity) {
-                    diffuse = Vec3{std::max(closest_obj->Normal(point).Dot(light_ray), 0.0f)};
+                if (closest_obj->RayCollision({point, light_vector}) == Utils::kInfinity) {
+                    diffuse = Vec3{std::max(normal.Dot(light_vector), 0.0f)};
                     diffuse *= light.second;
+                    specular = Vec3{std::powf(std::max(reflected.Dot(eye_vector), 0.0f), spec_coefficient)};
                 }
 
                 output.SetPixel(i, j, (ambient + diffuse + specular).Clamped());
