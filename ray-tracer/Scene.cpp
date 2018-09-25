@@ -53,7 +53,7 @@ bool Scene::Render(const std::string& filename) const {
                 Vec3 normal {closest_obj->Normal(point)};
 
                 Vec3 eye_vector {(camera_location - point).Normalized()};
-                Vec3 reflected {-light_vector.Reflected(normal)};
+                Vec3 reflected {light_vector.Reflected(normal)};
                 float spec_coefficient = 100.0f;
 
                 Vec3 ambient {0.02f, 0.02f, 0.02f};

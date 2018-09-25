@@ -49,7 +49,7 @@ public:
 
     // Reflect in a given normal
     Vec3 Reflected(const Vec3& normal) const {
-        return *this - (normal * 2.0f * normal.Dot(*this));
+        return normal * 2.0f * normal.Dot(*this) - *this;
     }
 
     float x, y, z;
