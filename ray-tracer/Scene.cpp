@@ -23,42 +23,42 @@ void Scene::AddObject(std::unique_ptr<Object> obj) {
 }
 
 bool Scene::Render(const std::string& filename) const {
-    Bitmap output {width, height};
+    auto output = Bitmap{width, height};
 
-    float aspect {static_cast<float>(width)/static_cast<float>(height)};
-    Vec3 camera_location {0.0f, 0.0f, 0.5f * aspect / std::tanf(0.5f * fov)};
+    auto aspect = static_cast<float>(width)/static_cast<float>(height);
+    auto camera_location = Vec3{0.0f, 0.0f, 0.5f * aspect / std::tanf(0.5f * fov)};
 
-    for (int i {0}; i < width; i++) {
-        float hor_proportion {static_cast<float>(i)/static_cast<float>(width)};
+    for (auto i = 0; i < width; i++) {
+        auto hor_proportion = static_cast<float>(i)/static_cast<float>(width);
 
-        for (int j {0}; j < height; j++) {
-            float vert_proportion {static_cast<float>(j)/static_cast<float>(height)};
-            Vec3 pixel_location {aspect * (hor_proportion - 0.5f), vert_proportion - 0.5f, 0.0f};
+        for (auto j = 0; j < height; j++) {
+            auto vert_proportion = static_cast<float>(j)/static_cast<float>(height);
+            auto pixel_location = Vec3{aspect * (hor_proportion - 0.5f), vert_proportion - 0.5f, 0.0f};
 
-            Ray r {camera_location, (pixel_location - camera_location).Normalized()};
-            float closest_dist {Utils::kInfinity};
-            int closest_index = -1;
+            auto r = Ray{camera_location, (pixel_location - camera_location).Normalized()};
+            auto closest_dist = Utils::kInfinity;
+            auto closest_index = -1;
 
-            for (int i = 0; i < objects.size(); i++) {
-                float dist {objects[i]->RayCollision(r)};
+            for (auto k = 0; k < objects.size(); k++) {
+                auto dist = objects[k]->RayCollision(r);
                 if (dist < closest_dist) {
                     closest_dist = dist;
-                    closest_index = i;
+                    closest_index = k;
                 }
             }
 
             if (closest_index != -1) {
-                Vec3 point {r.Along(closest_dist - Utils::kEpsilon)};
-                Vec3 light_vector {(light.first - point).Normalized()};
-                Vec3 normal {objects[closest_index]->Normal(point)};
+                auto point = Vec3{r.Along(closest_dist - Utils::kEpsilon)};
+                auto light_vector = Vec3{(light.first - point).Normalized()};
+                auto normal = Vec3{objects[closest_index]->Normal(point)};
 
-                Vec3 eye_vector {(camera_location - point).Normalized()};
-                Vec3 reflected {light_vector.Reflected(normal)};
-                float spec_coefficient = 100.0f;
+                auto eye_vector = Vec3{(camera_location - point).Normalized()};
+                auto reflected = Vec3{light_vector.Reflected(normal)};
+                auto spec_coefficient = 100.0f;
 
-                Vec3 ambient {0.02f, 0.02f, 0.02f};
-                Vec3 diffuse {};
-                Vec3 specular {};
+                auto ambient = Vec3{0.02f, 0.02f, 0.02f};
+                auto diffuse = Vec3{};
+                auto specular = Vec3{};
 
                 if (objects[closest_index]->RayCollision({point, light_vector}) == Utils::kInfinity) {
                     diffuse = Vec3{std::max(normal.Dot(light_vector), 0.0f)};
