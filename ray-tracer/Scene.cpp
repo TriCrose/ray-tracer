@@ -18,8 +18,8 @@ void Scene::SetLight(const Vec3& pos, const Vec3& colour) {
     light.second = colour;
 }
 
-void Scene::AddObject(const Object* obj) {
-    objects.push_back(obj);
+void Scene::AddObject(std::unique_ptr<Object> obj) {
+    objects.push_back(std::move(obj));
 }
 
 bool Scene::Render(const std::string& filename) const {
@@ -37,20 +37,20 @@ bool Scene::Render(const std::string& filename) const {
 
             Ray r {camera_location, (pixel_location - camera_location).Normalized()};
             float closest_dist {Utils::kInfinity};
-            const Object* closest_obj {nullptr};
+            int closest_index = -1;
 
-            for (auto obj : objects) {
-                float dist {obj->RayCollision(r)};
+            for (int i = 0; i < objects.size(); i++) {
+                float dist {objects[i]->RayCollision(r)};
                 if (dist < closest_dist) {
                     closest_dist = dist;
-                    closest_obj = obj;
+                    closest_index = i;
                 }
             }
 
-            if (closest_obj) {
+            if (closest_index != -1) {
                 Vec3 point {r.Along(closest_dist - Utils::kEpsilon)};
                 Vec3 light_vector {(light.first - point).Normalized()};
-                Vec3 normal {closest_obj->Normal(point)};
+                Vec3 normal {objects[closest_index]->Normal(point)};
 
                 Vec3 eye_vector {(camera_location - point).Normalized()};
                 Vec3 reflected {light_vector.Reflected(normal)};
@@ -60,7 +60,7 @@ bool Scene::Render(const std::string& filename) const {
                 Vec3 diffuse {};
                 Vec3 specular {};
 
-                if (closest_obj->RayCollision({point, light_vector}) == Utils::kInfinity) {
+                if (objects[closest_index]->RayCollision({point, light_vector}) == Utils::kInfinity) {
                     diffuse = Vec3{std::max(normal.Dot(light_vector), 0.0f)};
                     diffuse *= light.second;
                     specular = Vec3{std::powf(std::max(reflected.Dot(eye_vector), 0.0f), spec_coefficient)};
@@ -75,9 +75,6 @@ bool Scene::Render(const std::string& filename) const {
 }
 
 // Objects
-
-Object::~Object() {
-}
 
 Sphere::Sphere(Vec3 origin, float radius) : origin{origin}, radius{radius} {
 }

@@ -22,7 +22,7 @@ public:
     virtual float RayCollision(const Ray&) const = 0;
     virtual Vec3 Normal(const Vec3&) const = 0;
 
-    virtual ~Object();
+    virtual ~Object() = default;
 };
 
 class Sphere : public Object {
@@ -41,11 +41,11 @@ public:
     Scene(int image_width, int image_height, float fov);
 
     void SetLight(const Vec3& pos, const Vec3& colour = Vec3{1.0f});
-    void AddObject(const Object* obj);
+    void AddObject(std::unique_ptr<Object> obj);
 
     bool Render(const std::string& filename) const;
 private:
-    std::vector<const Object*> objects;
+    std::vector<std::unique_ptr<Object>> objects;
     std::pair<Vec3, Vec3> light;
 
     int width;
