@@ -48,9 +48,9 @@ private:
     std::vector<std::unique_ptr<Object>> objects;
     std::pair<Vec3, Vec3> light;
 
-    int width;
-    int height;
-    float fov;
+    const int width;
+    const int height;
+    const float fov;
 };
 
 #endif // SCENE_H

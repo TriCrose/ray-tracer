@@ -26,10 +26,12 @@ void Scene::Render(const std::string& filename) const {
     auto output = Bitmap{width, height};
     std::cout << "Created blank " << width << "x" << height << " bitmap image.\n";
 
-    auto aspect = static_cast<float>(width)/static_cast<float>(height);
+    const auto aspect = static_cast<float>(width)/static_cast<float>(height);
     auto camera_location = Vec3{0.0f, 0.0f, 0.5f * aspect / std::tanf(0.5f * fov)};
 
-    std::cout << "Rendering... ";
+    std::cout << "Rendering... 0%";
+    const auto total_pixels = width * height;
+    auto current_pixel = 0;
     auto render_time = Utils::Time();
 
     for (auto i = 0; i < width; i++) {
@@ -72,11 +74,16 @@ void Scene::Render(const std::string& filename) const {
 
                 output.SetPixel(i, j, (ambient + diffuse + specular).Clamped());
             }
+
+            current_pixel++;
+            if (current_pixel % (total_pixels/25) == 0) {
+                std::cout << "\rRendering... " << 100 * current_pixel/total_pixels << "%";
+            }
         }
     }
 
     render_time = Utils::Time() - render_time;
-    std::cout << "done.\nRender took " << render_time << " ms.\n";
+    std::cout << "\rRendering... 100%\nRender took " << render_time << " ms.\n";
 
     if (output.WriteToDisk(filename)) std::cout << "Saved image to " << filename << ".\n";
     else std::cout << "Failed to open file " << filename << " for writing.\n";
