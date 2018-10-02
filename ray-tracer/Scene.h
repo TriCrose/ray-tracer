@@ -43,7 +43,7 @@ public:
     void SetLight(const Vec3& pos, const Vec3& colour = Vec3{1.0f});
     void AddObject(std::unique_ptr<Object> obj);
 
-    bool Render(const std::string& filename) const;
+    void Render(const std::string& filename) const;
 private:
     std::vector<std::unique_ptr<Object>> objects;
     std::pair<Vec3, Vec3> light;

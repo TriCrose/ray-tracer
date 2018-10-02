@@ -22,12 +22,15 @@ void Scene::AddObject(std::unique_ptr<Object> obj) {
     objects.push_back(std::move(obj));
 }
 
-bool Scene::Render(const std::string& filename) const {
+void Scene::Render(const std::string& filename) const {
     auto output = Bitmap{width, height};
-    std::cout << "Created blank " << width << "x" << height << " bitmap image\n";
+    std::cout << "Created blank " << width << "x" << height << " bitmap image.\n";
 
     auto aspect = static_cast<float>(width)/static_cast<float>(height);
     auto camera_location = Vec3{0.0f, 0.0f, 0.5f * aspect / std::tanf(0.5f * fov)};
+
+    std::cout << "Rendering... ";
+    auto render_time = Utils::Time();
 
     for (auto i = 0; i < width; i++) {
         auto hor_proportion = static_cast<float>(i)/static_cast<float>(width);
@@ -40,7 +43,7 @@ bool Scene::Render(const std::string& filename) const {
             auto closest_dist = Utils::kInfinity;
             auto closest_index = -1;
 
-            for (auto k = 0; k < objects.size(); k++) {
+            for (auto k = unsigned{0}; k < objects.size(); k++) {
                 auto dist = objects[k]->RayCollision(r);
                 if (dist < closest_dist) {
                     closest_dist = dist;
@@ -72,7 +75,11 @@ bool Scene::Render(const std::string& filename) const {
         }
     }
 
-    return output.WriteToDisk(filename);
+    render_time = Utils::Time() - render_time;
+    std::cout << "done.\nRender took " << render_time << " ms.\n";
+
+    if (output.WriteToDisk(filename)) std::cout << "Saved image to " << filename << ".\n";
+    else std::cout << "Failed to open file " << filename << " for writing.\n";
 }
 
 // Objects
