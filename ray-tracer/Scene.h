@@ -19,8 +19,8 @@ public:
 
 class Object {
 public:
-    virtual float RayCollision(const Ray&) const = 0;
-    virtual Vec3 Normal(const Vec3&) const = 0;
+    virtual float RayCollision(const Ray& r) const = 0;
+    virtual Vec3 Normal(const Vec3& pos) const = 0;
 
     virtual ~Object() = default;
 };
@@ -45,6 +45,8 @@ public:
 
     void Render(const std::string& filename) const;
 private:
+    const Object* GetClosestObject(const Ray& r, float* distance) const;
+
     std::vector<std::unique_ptr<Object>> objects;
     std::pair<Vec3, Vec3> light;
 

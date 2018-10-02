@@ -41,22 +41,15 @@ void Scene::Render(const std::string& filename) const {
             auto vert_proportion = static_cast<float>(j)/static_cast<float>(height);
             auto pixel_location = Vec3{aspect * (hor_proportion - 0.5f), vert_proportion - 0.5f, 0.0f};
 
-            auto r = Ray{camera_location, (pixel_location - camera_location).Normalized()};
-            auto closest_dist = Utils::kInfinity;
-            auto closest_index = -1;
+            auto light_ray = Ray{camera_location, (pixel_location - camera_location).Normalized()};
 
-            for (auto k = unsigned{0}; k < objects.size(); k++) {
-                auto dist = objects[k]->RayCollision(r);
-                if (dist < closest_dist) {
-                    closest_dist = dist;
-                    closest_index = k;
-                }
-            }
+            auto closest_dist = float{};
+            auto closest_obj = GetClosestObject(light_ray, &closest_dist);
 
-            if (closest_index != -1) {
-                auto point = Vec3{r.Along(closest_dist - Utils::kEpsilon)};
+            if (closest_obj) {
+                auto point = Vec3{light_ray.Along(closest_dist - Utils::kEpsilon)};
                 auto light_vector = Vec3{(light.first - point).Normalized()};
-                auto normal = Vec3{objects[closest_index]->Normal(point)};
+                auto normal = Vec3{closest_obj->Normal(point)};
 
                 auto eye_vector = Vec3{(camera_location - point).Normalized()};
                 auto reflected = Vec3{light_vector.Reflected(normal)};
@@ -66,7 +59,7 @@ void Scene::Render(const std::string& filename) const {
                 auto diffuse = Vec3{};
                 auto specular = Vec3{};
 
-                if (objects[closest_index]->RayCollision({point, light_vector}) == Utils::kInfinity) {
+                if (closest_obj->RayCollision({point, light_vector}) == Utils::kInfinity) {
                     diffuse = Vec3{std::max(normal.Dot(light_vector), 0.0f)};
                     diffuse *= light.second;
                     specular = Vec3{std::powf(std::max(reflected.Dot(eye_vector), 0.0f), spec_coefficient)};
@@ -87,6 +80,23 @@ void Scene::Render(const std::string& filename) const {
 
     if (output.WriteToDisk(filename)) std::cout << "Saved image to " << filename << ".\n";
     else std::cout << "Failed to open file " << filename << " for writing.\n";
+}
+
+inline const Object* Scene::GetClosestObject(const Ray& r, float* distance) const {
+    auto closest_dist = Utils::kInfinity;
+    auto closest_index = -1;
+    auto object_count = static_cast<signed>(objects.size());
+
+    for (auto i = 0; i < object_count; i++) {
+        auto dist = objects[i]->RayCollision(r);
+        if (dist < closest_dist) {
+            closest_dist = dist;
+            closest_index = i;
+        }
+    }
+
+    *distance = closest_dist;
+    return closest_index == -1 ? nullptr : objects[closest_index].get();
 }
 
 // Objects
