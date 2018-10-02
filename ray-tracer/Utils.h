@@ -3,6 +3,7 @@
 #define UTILS_H
 
 #include <limits>
+#include <chrono>
 
 namespace Utils {
     constexpr float kPi         {3.14159f};
@@ -11,6 +12,13 @@ namespace Utils {
 
     constexpr float ToRadians(float degrees) { return degrees * kPi/180.0f; }
     constexpr float ToDegrees(float radians) { return radians * 180.0f/kPi; }
+
+    // TODO: check return value size
+    inline long Time() {
+        using namespace std::chrono;
+        auto epoch = time_point_cast<milliseconds>(high_resolution_clock::now()).time_since_epoch();
+        return static_cast<long>(duration_cast<milliseconds>(epoch).count());
+    }
 }
 
 #endif // UTILS_H
