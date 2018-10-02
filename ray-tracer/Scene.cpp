@@ -24,6 +24,7 @@ void Scene::AddObject(std::unique_ptr<Object> obj) {
 
 bool Scene::Render(const std::string& filename) const {
     auto output = Bitmap{width, height};
+    std::cout << "Created blank " << width << "x" << height << " bitmap image\n";
 
     auto aspect = static_cast<float>(width)/static_cast<float>(height);
     auto camera_location = Vec3{0.0f, 0.0f, 0.5f * aspect / std::tanf(0.5f * fov)};
@@ -81,17 +82,17 @@ Sphere::Sphere(Vec3 origin, float radius) : origin{origin}, radius{radius} {
 
 float Sphere::RayCollision(const Ray& r) const {
     // Quadratic equation (a is 1)
-    Vec3 diff {r.origin - origin};
-    float b {2 * diff.Dot(r.dir)};
-    float c {diff.LengthSquared() - radius * radius};
-    float discriminant {b * b - 4 * c};
+    auto diff = Vec3{r.origin - origin};
+    auto b = 2.0f * diff.Dot(r.dir);
+    auto c = diff.LengthSquared() - radius * radius;
+    auto discriminant = b * b - 4 * c;
 
     if (discriminant < 0.0f) {
         return Utils::kInfinity;
     } else if (discriminant < Utils::kEpsilon) {
         return b > 0.0f ? Utils::kInfinity : -b;
     } else {
-        float s {std::sqrtf(discriminant)};
+        auto s = std::sqrtf(discriminant);
         if (s < b) return Utils::kInfinity;
         else if (s > -b) return (-b + s)/2.0f;
         else return (-b - s)/2.0f;

@@ -14,8 +14,8 @@ Bitmap::Bitmap(int width, int height) :
     pixel_data  ((row_size * height), 0)        // Note parentheses, see above
 {
 
-    unsigned data_size { static_cast<unsigned>(pixel_data.size()) };
-    unsigned file_size { kHeaderSize + data_size };
+    auto data_size = pixel_data.size();
+    auto file_size = kHeaderSize + data_size;
 
     // Create the header (note: integers are little-endian, hence the shifting)
     header = {
@@ -67,9 +67,6 @@ Bitmap::Bitmap(int width, int height) :
         0, 0, 0, 0,        // Number of colours in the palette (4 bytes)
         0, 0, 0, 0         // Number of important colours (4 bytes)
     };
-
-    // Now we're ready to start setting pixel values
-    std::cout << "Created blank " << width << "x" << height << " bitmap image\n";
 }
 
 int Bitmap::Width() const {
@@ -82,7 +79,7 @@ int Bitmap::Height() const {
 
 void Bitmap::SetPixel(int x, int y, const Vec3& colour) {
     if (0 <= x && x < width && 0 <= y && y < height) {
-        int offset { y * row_size + x * 3 };
+        auto offset = y * row_size + x * 3;
         // Bitmaps use BGR colour data
         pixel_data[offset + 0] = static_cast<unsigned char>(colour.z * 255.0f);
         pixel_data[offset + 1] = static_cast<unsigned char>(colour.y * 255.0f);
@@ -93,7 +90,7 @@ void Bitmap::SetPixel(int x, int y, const Vec3& colour) {
 }
 
 bool Bitmap::WriteToDisk(const std::string& filename) const {
-    std::ofstream file {filename, std::ios::out | std::ios::binary};
+    auto file = std::ofstream{filename, std::ios::out | std::ios::binary};
     if (file.is_open()) {
         // Use the default C locale so the output isn't locale-dependent
         file.imbue(std::locale::classic());
@@ -103,10 +100,8 @@ bool Bitmap::WriteToDisk(const std::string& filename) const {
         file.write(reinterpret_cast<const char*>(pixel_data.data()), pixel_data.size());
 
         file.close();
-        std::cout << "Finished writing image data to " << filename << "\n";
         return true;
     } else {
-        std::cout << "Failed to open file " << filename << " for writing\n";
         return false;
     }
 }
